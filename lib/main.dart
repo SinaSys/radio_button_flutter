@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'model/user.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -23,54 +25,49 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int selectedRadioTile;
+  User selectedUser;
+  List<User> users;
+
 
   @override
   void initState() {
     super.initState();
-    selectedRadioTile = 0;
+    users = User.getUsers();
   }
 
-  // Changes the selected value on 'onChanged' click on each radio button
-  setSelectedRadioTile(int val) {
+  setSelectedUser(User user) {
     setState(() {
-      selectedRadioTile = val;
+      selectedUser = user;
     });
+  }
+
+  List<Widget> createRadioListUsers() {
+    List<Widget> widgets = [];
+    for (User user in users) {
+      widgets.add(
+        RadioListTile(
+          value: user,
+          groupValue: selectedUser,
+          title: Text(user.firstName),
+          subtitle: Text(user.lastName),
+          onChanged: (currentUser) {
+            print("Current User ${currentUser.firstName}");
+            setSelectedUser(currentUser);
+          },
+          selected: selectedUser == user,
+          activeColor: Colors.green,
+        ),
+      );
+    }
+    return widgets;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [
-          RadioListTile(
-            value: 1,
-            groupValue: selectedRadioTile,
-            onChanged: (val) {setSelectedRadioTile(val);},
-            selected: true,
-            title: Text("Radio 1"),
-            subtitle: Text("Radio 1 Subtitle"),
-            activeColor: Colors.red,
-            secondary: OutlineButton(
-              child: Text("Say Hi"),
-              onPressed: () {print("Say Hello");},),
-          ),
-          RadioListTile(
-            value: 2,
-            groupValue: selectedRadioTile,
-            title: Text("Radio 2"),
-            subtitle: Text("Radio 2 Subtitle"),
-            onChanged: (val) {
-              print("Radio Tile pressed $val");
-              setSelectedRadioTile(val);
-            },
-            activeColor: Colors.red,
-            secondary: OutlineButton(
-              child: Text("Say Hi"),
-              onPressed: () {
-                print("Say Hello");
-              },
-            ),
-            selected: false,),],),);
+        children: createRadioListUsers(),
+      ),
+    );
   }
 }
