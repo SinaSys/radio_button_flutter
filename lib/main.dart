@@ -8,6 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity),
@@ -22,56 +23,54 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int selectedRadio;
+  int selectedRadioTile;
 
   @override
   void initState() {
     super.initState();
-    selectedRadio = 0;
+    selectedRadioTile = 0;
   }
 
   // Changes the selected value on 'onChanged' click on each radio button
-  setSelectedRadio(int val) {
+  setSelectedRadioTile(int val) {
     setState(() {
-      selectedRadio = val;
+      selectedRadioTile = val;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ButtonBar(
-        alignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Radio(
+      body: Column(
+        children: [
+          RadioListTile(
             value: 1,
-            groupValue: selectedRadio,
-            activeColor: Colors.green,
-            onChanged: (val) {
-              print("Radio $val");
-              setSelectedRadio(val);
-            },
+            groupValue: selectedRadioTile,
+            onChanged: (val) {setSelectedRadioTile(val);},
+            selected: true,
+            title: Text("Radio 1"),
+            subtitle: Text("Radio 1 Subtitle"),
+            activeColor: Colors.red,
+            secondary: OutlineButton(
+              child: Text("Say Hi"),
+              onPressed: () {print("Say Hello");},),
           ),
-          Radio(
+          RadioListTile(
             value: 2,
-            groupValue: selectedRadio,
-            activeColor: Colors.blue,
+            groupValue: selectedRadioTile,
+            title: Text("Radio 2"),
+            subtitle: Text("Radio 2 Subtitle"),
             onChanged: (val) {
-              print("Radio $val");
-              setSelectedRadio(val);
+              print("Radio Tile pressed $val");
+              setSelectedRadioTile(val);
             },
-          ),
-          Radio(
-            value: 3,
-            groupValue: selectedRadio,
-            activeColor: Colors.blue,
-            onChanged: (val) {
-              print("Radio $val");
-              setSelectedRadio(val);
-            },
-          ),
-        ],
-      ),
-    );
+            activeColor: Colors.red,
+            secondary: OutlineButton(
+              child: Text("Say Hi"),
+              onPressed: () {
+                print("Say Hello");
+              },
+            ),
+            selected: false,),],),);
   }
 }
